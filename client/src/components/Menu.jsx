@@ -68,6 +68,7 @@ display:flex;
 align-items:center;
 gap:5px;`;  
 const Menu=({darkMode,setdarkMode})=>{
+  const {currentUser}=useSelector((state)=>state.user.currentUser);
   return (
     <Container>
       <Wrapper>
@@ -81,13 +82,13 @@ const Menu=({darkMode,setdarkMode})=>{
           <HomeIcon/>
           Home
         </Item>
-        <Link to="trending" style={{textDecoration:"none"}}>
+        <Link to="trending" style={{textDecoration:"none", color:"inherit"}}>
           <Item>
             <ExploreIcon/>
             Explore
           </Item>
         </Link>
-        <Link to="subscription" style={{textDecoration:"none"}}>
+        <Link to="subscription" style={{textDecoration:"none",color:"inherit"}}>
           <Item>
             <SubscriptionsIcon/>
             Subscriptions
@@ -103,13 +104,16 @@ const Menu=({darkMode,setdarkMode})=>{
           History
         </Item>
         <Hr/>
-        <Login>
-          Sign in to like videos,comment and subcribe
-          <Link to="signin" style={{textDecoration:"none"}}>
-            <Button><AssignmentIndIcon/>SIGN IN</Button>
-          </Link>
-        </Login>
-        <Hr/>
+        {!currentUser &&
+          <>
+          <Login>
+            Sign in to like videos,comment and subcribe
+            <Link to="signin" style={{textDecoration:"none"}}>
+              <Button><AssignmentIndIcon/>SIGN IN</Button>
+            </Link>
+          </Login>
+          <Hr/>
+        </>}
         <Item>
           <MusicNoteIcon/>
           Music

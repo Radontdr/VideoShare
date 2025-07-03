@@ -1,5 +1,8 @@
 import React from "react";
 import styled from "styled-components";
+import { useState,useEffect } from "react";
+import {useDispatch} from "react-redux"
+import { loginStart,loginSuccess,loginFailure,logout } from "../../redux/userSlice";
 
 const Container = styled.div`
   display: flex;
@@ -64,19 +67,33 @@ const Link = styled.span`
 `;
 
 const SignIn = () => {
+  const [name,setName]=useState("");
+  const [password,setPassword]=useState("");
+  const [email,setEmail]=useState("");
+  const dispatch=useDispatch();
+  const handleLogin=async(e)=>{
+    e.preventDefault();
+    dispatch(loginStart());
+    try {
+      const res=await axios.post("/auth/signin",{name,password});
+      dispatch(loginSuccess(res.data));
+    } catch (error) {
+      dispatch(loginFailure());
+    }
+  }
   return (
     <Container>
       <Wrapper>
         <Title>Sign in</Title>
         <SubTitle>to continue to LamaTube</SubTitle>
-        <Input placeholder="username" />
-        <Input type="password" placeholder="password" />
+        <Input placeholder="username" onChange={(e)=>setName(e.target.value)}/>
+        <Input type="password" placeholder="password" onChange={(e)=>setPassword(e.target.value)} />
         <Button>Sign in</Button>
         <Title>or</Title>
-        <Input placeholder="username" />
-        <Input placeholder="email" />
-        <Input type="password" placeholder="password" />
-        <Button>Sign up</Button>
+        <Input placeholder="username" onChange={(e)=>setName(e.target.value)}/>
+        <Input placeholder="email" onChange={(e)=>setEmail(e.target.value)}/>
+        <Input type="password" placeholder="password" onChange={(e)=>setPassword(e.target.value)} />
+        <Button onClick={handleLogin}>Sign up</Button>
       </Wrapper>
       <More>
         English(USA)
