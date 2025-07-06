@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit'
+
 import userReducer from '../redux/userSlice'
 import videoReducer from '../redux/userSlice'
 import { createRoot } from 'react-dom/client'
