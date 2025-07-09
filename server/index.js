@@ -6,9 +6,15 @@ import videoRoute from "./routes/video.routes.js";
 import commentRoute from "./routes/comment.routes.js";
 import authRoute from "./routes/auth.routes.js";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 dotenv.config();
 const app=express();
+
+app.use(cors({
+  origin: "http://localhost:5173", // frontend URL
+  credentials: true
+}));
 app.use(cookieParser())
 app.use(express.json())
 app.use("/api/users",userRoute)
