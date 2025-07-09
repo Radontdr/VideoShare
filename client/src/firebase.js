@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import {getAuth,GoogleAuthProvider} from "firebase/auth";
 const firebaseConfig = {
-  apiKey: process.env.API_KEY,
+  apiKey:import.meta.env.VITE_API_KEY,
   authDomain: "video-sharing-29edc.firebaseapp.com",
   projectId: "video-sharing-29edc",
   storageBucket: "video-sharing-29edc.firebasestorage.app",
@@ -12,5 +12,6 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const auth=getAuth();
-const provider= new GoogleAuthProvider();
-export default app;
+export const provider= new GoogleAuthProvider();
+export default app
+

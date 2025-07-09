@@ -1,7 +1,5 @@
-
-import userReducer from '../redux/userSlice'
-import videoReducer from '../redux/userSlice'
-import { createRoot } from 'react-dom/client'
+import userReducer from './userSlice'
+import videoReducer from './videoSlice'
 import { configureStore,combineReducers} from '@reduxjs/toolkit'
 import {
   persistStore,
@@ -14,7 +12,6 @@ import {
   REGISTER,
 } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
-import { PersistGate } from 'redux-persist/integration/react'
 const persistConfig = {
   key: 'root',
   version: 1,

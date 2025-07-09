@@ -2,9 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import { useState,useEffect } from "react";
 import {useDispatch} from "react-redux"
-import { loginStart,loginSuccess,loginFailure,logout } from "../../redux/userSlice";
-import { auth,provider } from "../firebase";
+import { loginStart,loginSuccess,loginFailure,logout } from "../../redux/userSlice.js";
+import { auth,provider } from "../firebase.js";
 import { signInWithPopup } from "firebase/auth";
+import axios
+ from "axios";
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -76,7 +78,7 @@ const SignIn = () => {
     dispatch(loginStart());
     signInWithPopup(auth,provider)
     .then((result)=>{
-      axios.post("/auth/google",{
+       axios.post("/api/auth/google",{
         name:result.user.displayName,
         email:result.user.email,
         img:result.user.photoURL,
@@ -85,14 +87,14 @@ const SignIn = () => {
       dispatch(loginSuccess(res.data));
     })
     .catch((error)=>{
-      dispatch(loginFailure);
+      dispatch(loginFailure());
     })
   }
   const handleLogin=async(e)=>{
     e.preventDefault();
     dispatch(loginStart());
     try {
-      const res=await axios.post("/auth/signin",{name,password});
+      const res=await axios.post("/api/auth/signin",{name,password});
       dispatch(loginSuccess(res.data));
     } catch (error) {
       dispatch(loginFailure());
@@ -105,14 +107,14 @@ const SignIn = () => {
         <SubTitle>to continue to LamaTube</SubTitle>
         <Input placeholder="username" onChange={(e)=>setName(e.target.value)}/>
         <Input type="password" placeholder="password" onChange={(e)=>setPassword(e.target.value)} />
-        <Button>Sign in</Button>
+        <Button onClick={handleLogin}>Sign in</Button>
         <Title>or</Title>
         <Button onClick={signInWithGoogle}>Sign in with Google</Button>
         <Title>or</Title>
         <Input placeholder="username" onChange={(e)=>setName(e.target.value)}/>
         <Input placeholder="email" onChange={(e)=>setEmail(e.target.value)}/>
         <Input type="password" placeholder="password" onChange={(e)=>setPassword(e.target.value)} />
-        <Button onClick={handleLogin}>Sign up</Button>
+        <Button >Sign up</Button>
       </Wrapper>
       <More>
         English(USA)

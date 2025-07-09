@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import {format} from "timeago.js";
 import axios from 'axios';
+import { useState,useEffect } from 'react';
 
 const  Container=styled.div`
 width:${(props)=>props.type!=="sm" && "360px"};
@@ -19,7 +20,7 @@ flex:1;`
 
 const Details=styled.div`
 display:flex;
-margin-top=${(props)=>props.type==="sm" && "16px"};
+margin-top: ${(props) => props.type !== "sm" && "16px"};
 gap:12px;
 flex:1;`;
 
@@ -38,7 +39,7 @@ color:${({theme})=>theme.text}`;
 
 const ChannelName=styled.h2`
 font-size:14px;
-color:${({theme})=>theme.textSoft}
+color:${({theme})=>theme.textSoft};
 margin:10px 0px;`;
 
 const Info=styled.div`
@@ -56,13 +57,13 @@ useEffect(() => {
   fetchChannel();
 }, [video.userId]);
   return (
-    <Link to="/video/test" style={{textDecoration:"none"}}>
+    <Link to={`/video/${video._id}`} style={{textDecoration:"none"}}>
       <Container type={type}>
-          <Image type={type} src={video.imgurl}/>
+          <Image type={type} src={video.imgUrl}/>
           <Details type={type}>
             <ChannelImg  type={type} src={channel.img}/>
             <Texts>
-              <Title>{video.Title}</Title>
+              <Title>{video.title}</Title>
               <ChannelName>{channel.name}</ChannelName>
               <Info>{video.views} views {format(video.createdAt)} </Info>
             </Texts>

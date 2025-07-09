@@ -18,6 +18,8 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import {Link} from "react-router-dom"
+import { useSelector } from 'react-redux';
+
 const Container=styled.div`
  flex:1;
  background-color:${({theme})=>theme.bgLighter};
@@ -32,7 +34,7 @@ const Wrapper=styled.div`
 
 const Logo=styled.div`
   display:flex;
-  aligns-items:center;
+  align-items:center;
   gap:5px;
   font-weight:bold;
   margin-bottom:25px`;
@@ -68,7 +70,7 @@ display:flex;
 align-items:center;
 gap:5px;`;  
 const Menu=({darkMode,setdarkMode})=>{
-  const {currentUser}=useSelector((state)=>state.user.currentUser);
+  const currentUser=useSelector((state)=>state.user.currentUser);
   return (
     <Container>
       <Wrapper>

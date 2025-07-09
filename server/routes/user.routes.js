@@ -7,6 +7,7 @@ import {
   unsubscribe,
   like,
   dislike,
+  getCurrentUser
 } from "../controllers/user.controller.js";
 import { verifyToken } from "../verifyToken.js";
 
@@ -32,5 +33,7 @@ router.put("/like/:videoId", verifyToken, like);
 
 //dislike a video
 router.put("/dislike/:videoId", verifyToken, dislike);
+
+router.get("/me", verifyToken, getCurrentUser);
 
 export default router;

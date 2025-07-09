@@ -57,13 +57,13 @@ gap:10px;
 font-weight:500;
 color:${({theme})=>theme.text}`
 
-const Avatar=styled.div`
+const Avatar=styled.img`
 width:32px;
 height:32px;
 border-radius:50%;
 background-color: #999`
 const Navbar=()=>{
-  const {currentUser}=useSelector((state)=>state.user.currentUser);
+  const currentUser=useSelector((state)=>state.user.currentUser);
   return (
     <Container>
       <Wrapper>
@@ -74,12 +74,12 @@ const Navbar=()=>{
         {currentUser ? (
           <User>
             <UploadOutlinedIcon/>
-            <Avatar/>
+            <Avatar src={currentUser.img}/>
             {currentUser.name}
           </User>
-        ) : <Link to="signin" style={{textDecoration:"none"}}>
+        ) : (<Link to="signin" style={{textDecoration:"none"}}>
           <Button><AssignmentIndIcon/>SIGN IN</Button>
-        </Link>}
+        </Link>)}
       </Wrapper>
     </Container>
   )

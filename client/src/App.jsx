@@ -2,12 +2,14 @@ import styled from "styled-components"
 import Menu from "./components/Menu"
 import Navbar from "./components/Navbar"
 import {ThemeProvider} from "styled-components";
-import { darkTheme, lightTheme } from "./utils/theme";
+import { darkTheme, lightTheme } from "./utils/theme.js";
 import { useState } from "react";
 import { BrowserRouter,Routes,Route } from "react-router-dom";
-import Home from "./pages/Home";
-import Video from "./pages/Video";
-import SignIn from "./pages/SignIn"
+import Home from "./pages/Home.jsx";
+import Video from "./pages/Video.jsx";
+import SignIn from "./pages/SignIn.jsx"
+import AuthBootstrap from "./AuthBootstrap.jsx";
+
 const Container =styled.div`
 display:flex;`;
 const Main=styled.div`
@@ -23,6 +25,7 @@ function App() {
           <Menu darkMode={darkMode} setdarkMode={setdarkMode}/>
           <Main>
             <Navbar/>
+            <AuthBootstrap />
             <Wrapper>
               <Routes>
                 <Route path="/">
