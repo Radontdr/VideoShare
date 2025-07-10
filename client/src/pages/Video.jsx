@@ -9,7 +9,7 @@ import Card from "../components/Card.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom"; 
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance.js";
 import { fetchSuccess } from "../../redux/videoSlice.js";
 import { format } from "timeago.js";
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
@@ -126,8 +126,8 @@ const Video = () => {
    useEffect(() => {
     const fetchData = async () => {
       try {
-        const videoRes = await axios.get(`/api/videos/find/${path}`);
-        const channelRes = await axios.get(
+        const videoRes = await axiosInstance.get(`/api/videos/find/${path}`);
+        const channelRes = await axiosInstance.get(
           `/api/users/find/${videoRes.data.userId}`
         );
         setChannel(channelRes.data);
@@ -138,12 +138,12 @@ const Video = () => {
   }, [path, dispatch]);
 
   const handleLike = async () => {
-    const res = await axios.put(`/api/users/like/${currentVideo._id}`)
+    const res = await axiosInstance.put(`/api/users/like/${currentVideo._id}`)
     console.log("Like response:", res.data);
     dispatch(like(res.data)); // res.data._id is the userId of the current user
   }
   const handleDislike = async () => {
-    const res = await axios.put(`/api/users/dislike/${currentVideo._id}`)
+    const res = await axiosInstance.put(`/api/users/dislike/${currentVideo._id}`)
     dispatch(dislike(res.data)); // res.data._id is the userId of the current user
   }
 
@@ -159,10 +159,10 @@ const Video = () => {
   try {
     if (currentUser.subscribedUsers.includes(channel._id)) {
       console.log("Already subscribed — unsubscribing...");
-      res = await axios.put(`/api/users/unsub/${channel._id}`);
+      res = await axiosInstance.put(`/api/users/unsub/${channel._id}`);
     } else {
       console.log("Not subscribed — subscribing...");
-      res = await axios.put(`/api/users/sub/${channel._id}`);
+      res = await axiosInstance.put(`/api/users/sub/${channel._id}`);
     }
     dispatch(subscription(channel._id)); // Use channel ID, not res.data
   } catch (error) {
