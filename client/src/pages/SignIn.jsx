@@ -5,8 +5,8 @@ import {useDispatch} from "react-redux"
 import { loginStart,loginSuccess,loginFailure,logout } from "../../redux/userSlice.js";
 import { auth,provider } from "../firebase.js";
 import { signInWithPopup } from "firebase/auth";
-import axios
- from "axios";
+import axiosInstance from "../utils/axiosInstance.js";
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -78,7 +78,7 @@ const SignIn = () => {
     dispatch(loginStart());
     signInWithPopup(auth,provider)
     .then((result)=>{
-       axios.post("/api/auth/google",{
+       axiosInstance.post("/api/auth/google",{
         name:result.user.displayName,
         email:result.user.email,
         img:result.user.photoURL,
@@ -94,7 +94,7 @@ const SignIn = () => {
     e.preventDefault();
     dispatch(loginStart());
     try {
-      const res=await axios.post("/api/auth/signin",{name,password});
+      const res=await axiosInstance.post("/api/auth/signin",{name,password});
       dispatch(loginSuccess(res.data));
     } catch (error) {
       dispatch(loginFailure());
