@@ -5,6 +5,9 @@ import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import UploadOutlinedIcon from '@mui/icons-material/UploadOutlined';
+import { useState } from 'react';
+import  Upload  from './Upload';
+import { useNavigate } from 'react-router-dom';
 
 const Container=styled.div`
 position:sticky;
@@ -63,25 +66,33 @@ height:32px;
 border-radius:50%;
 background-color: #999`
 const Navbar=()=>{
-  const currentUser=useSelector((state)=>state.user.currentUser);
+  const navigate = useNavigate()
+  const [open, setOpen] = useState(false);
+  const [q, setQ] = useState("");
+  const { currentUser } = useSelector((state) => state.user);
   return (
-    <Container>
-      <Wrapper>
-        <Search>
-          <Input placeholder='Search'/>
-          <SearchIcon/>
-        </Search>
-        {currentUser ? (
-          <User>
-            <UploadOutlinedIcon/>
-            <Avatar src={currentUser.img}/>
-            {currentUser.name}
-          </User>
-        ) : (<Link to="signin" style={{textDecoration:"none"}}>
-          <Button><AssignmentIndIcon/>SIGN IN</Button>
-        </Link>)}
-      </Wrapper>
-    </Container>
+    <>
+      <Container>
+        <Wrapper>
+          <Search>
+            <Input placeholder='Search'/>
+            <SearchIcon/>
+          </Search>
+          {currentUser ? (
+            <User>
+              <UploadOutlinedIcon onClick={()=>setOpen(true)}/>
+              <Avatar src={currentUser.img}/>
+              {currentUser.name}
+            </User>
+          ) : (<Link to="signin" style={{textDecoration:"none"}}>
+            <Button><AssignmentIndIcon/>SIGN IN</Button>
+          </Link>)}
+        </Wrapper>
+      </Container>
+      {open && (
+        <Upload setOpen={setOpen} />
+      )}
+    </>
   )
 }
 
