@@ -1,6 +1,8 @@
 import User from "../models/user.model.js";
 import Video from "../models/video.model.js";
 import { createError } from "../error.js";
+import axios from "axios";
+import SearchQueue from "../models/searchQueue.model.js";
 
 export const addVideo = async (req, res, next) => {
   const newVideo = new Video({ userId: req.user.id, ...req.body });
@@ -115,12 +117,54 @@ export const getByTag = async (req, res, next) => {
 
 export const search = async (req, res, next) => {
   const query = req.query.q;
+  console.log("YouTube API Key:", process.env.YOUTUBE_API_KEY);
+   console.log("🔍 Search controller triggered");
   try {
-    const videos = await Video.find({
+    // Step 1: Search your own DB
+    const localVideos = await Video.find({
       title: { $regex: query, $options: "i" },
-    }).limit(40);
-    res.status(200).json(videos);
+    });
+
+    if (localVideos.length > 0) {
+      return res.status(200).json({ source: "local", videos: localVideos });
+    }
+
+    await SearchQueue.findOneAndUpdate(
+      { query },
+      { $inc: { count: 1 } },
+      { upsert: true, new: true }
+    );
+    // Step 2: Fallback to YouTube search
+    const ytRes = await axios.get(
+      "https://www.googleapis.com/youtube/v3/search",
+      {
+        params: {
+          q: query,
+          key: process.env.YOUTUBE_API_KEY,
+          maxResults: 20,
+          type: "video",
+          part: "snippet",
+        },
+      }
+    );
+    console.log("YouTube API response:", ytRes.data);
+
+    const youtubeVideos = ytRes.data.items.map((item) => ({
+      _id: item.id.videoId,
+      title: item.snippet.title,
+      desc: item.snippet.description,
+      imgUrl: item.snippet.thumbnails.high.url,
+      isYouTube: true,
+    }));
+    if (youtubeVideos.length === 0) {
+      return res.status(404).json({ message: "No videos found." });
+    }
+    console.log("Transformed YouTube videos:", youtubeVideos);
+    return res
+      .status(200)
+      .json({ source: "youtube", videos: youtubeVideos });
   } catch (err) {
+    console.error("Search failed:", err.message);
     next(err);
   }
 };

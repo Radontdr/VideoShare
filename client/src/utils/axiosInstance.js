@@ -1,42 +1,40 @@
 // src/utils/axiosInstance.js
 import axios from "axios";
-import {store} from "../../redux/store.js";
+import { store } from "../../redux/store.js";
 import { logout } from "../../redux/userSlice.js";
 
-const axiosInstance = axios.create({
-  baseURL: "http://localhost:4000", // your backend base URL
-  withCredentials: true, // crucial: allows cookies (access & refresh tokens)
-});
-
-// Token refresh logic
 let isRefreshing = false;
 let failedQueue = [];
 
+const axiosInstance = axios.create({
+  baseURL: "http://localhost:4000",
+  withCredentials: true,
+});
+
 const processQueue = (error, token = null) => {
   failedQueue.forEach(prom => {
-    if (error) {
-      prom.reject(error);
-    } else {
-      prom.resolve(token);
-    }
+    error ? prom.reject(error) : prom.resolve(token);
   });
   failedQueue = [];
 };
 
 axiosInstance.interceptors.response.use(
-  response => response,
-  async error => {
+  (res) => res,
+  async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // Ignore refresh token requests themselves
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      !originalRequest.url.includes("/auth/refresh-token")
+    ) {
       originalRequest._retry = true;
 
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
-        })
-          .then(() => axiosInstance(originalRequest))
-          .catch(err => Promise.reject(err));
+        }).then(() => axiosInstance(originalRequest));
       }
 
       isRefreshing = true;
@@ -49,15 +47,8 @@ axiosInstance.interceptors.response.use(
       } catch (err) {
         processQueue(err, null);
 
-        // 🔴 If refresh fails, force logout
+        // Just dispatch logout — don't redirect here!
         store.dispatch(logout());
-
-        // Optional: Clear cookies manually (since you're using httpOnly, this is just visual cleanup)
-        document.cookie = "access_token=; Max-Age=0";
-        document.cookie = "refresh_token=; Max-Age=0";
-
-        // Redirect to login
-        window.location.href = "/signin";
 
         return Promise.reject(err);
       } finally {

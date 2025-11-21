@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "./utils/axiosInstance.js";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../redux/userSlice.js";
 
@@ -9,7 +9,7 @@ const AuthBootstrap = () => {
   useEffect(() => {
     const fetchMe = async () => {
       try {
-        const res = await axios.get("/api/users/me", { withCredentials: true });
+        const res = await axiosInstance.get("/api/users/me", { withCredentials: true });
         dispatch(loginSuccess(res.data));
       } catch (err) {
         console.warn("User not logged in or token expired");

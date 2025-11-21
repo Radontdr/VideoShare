@@ -3,8 +3,7 @@ import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { createError } from "../error.js";
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv"
-dotenv.config({path:"../.env"})
+
 
 const getAccesstokenandRefreshtoken = async (userId) => {
   try {
@@ -42,6 +41,7 @@ export const refreshaccesstoken = async (req, res) => {
     const options = {
       httpOnly: true,
       secure: false, // change to true in production (HTTPS)
+      sameSite: "Lax", 
 
     };
 
@@ -90,9 +90,13 @@ export const signin = async (req, res, next) => {
     res
       .cookie("access_token", AccessToken, {
         httpOnly: true,
+        secure: false,       // set to true in production with HTTPS
+        sameSite: "Lax"
       })
       .cookie("refresh_token", RefreshToken, {
         httpOnly: true,
+        secure: false,       // set to true in production with HTTPS
+        sameSite: "Lax"
       })
       .status(200)
       .json(others);
@@ -109,9 +113,13 @@ export const googleAuth = async (req, res, next) => {
       res
         .cookie("access_token", AccessToken, {
           httpOnly: true,
+          secure: false,       // set to true in production with HTTPS
+          sameSite: "Lax"
         })
         .cookie("refresh_token", RefreshToken, {
           httpOnly: true,
+          secure: false,       // set to true in production with HTTPS
+          sameSite: "Lax"
         })
         .status(200)
         .json(user._doc);

@@ -5,6 +5,8 @@ import userRoute from "./routes/user.routes.js";
 import videoRoute from "./routes/video.routes.js";
 import commentRoute from "./routes/comment.routes.js";
 import authRoute from "./routes/auth.routes.js";
+import uploadRoute from "./routes/upload.routes.js";
+import aiRoute from "./routes/ai.routes.js"; // Import AI routes
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
@@ -21,6 +23,8 @@ app.use("/api/users",userRoute)
 app.use("/api/videos",videoRoute)
 app.use("/api/comments",commentRoute)
 app.use("/api/auth",authRoute)
+app.use("/api/upload",uploadRoute );
+app.use("/api/ai", aiRoute); // Use AI routes
 
 const Port=process.env.PORT || 4000;
 app.listen(Port,()=>{
